@@ -87,7 +87,7 @@ browser-detector
 
 ### 安装
     
-    composer require apanly/browser-detector
+    composer require mokuyu/browser-detector
 
 ### 使用
 
