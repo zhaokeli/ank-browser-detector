@@ -91,9 +91,9 @@ browser-detector
 
 ### 使用
 
-    use apanly\BrowserDetector\Browser;
-    use apanly\BrowserDetector\Os;
-    use apanly\BrowserDetector\Device;
+    use ank\BrowserDetector\Browser;
+    use ank\BrowserDetector\Os;
+    use ank\BrowserDetector\Device;
     
     $browser = new Browser();
     
@@ -115,7 +115,7 @@ browser-detector
     }
 
 ### 说明
-本项目大部分源码clone 参考资料的sinergi/php-browser-detector，主要是原项目无法适应中国国情，需要修改，故此另开一个项目
+本项目源码clone https://github.com/apanly/browser-detector 因为检测的一些信息会经常变化故自己clone一份维护自己修改使用
 
 ### Lecense
 PHP Browser is licensed under [The MIT License (MIT)](LICENSE).

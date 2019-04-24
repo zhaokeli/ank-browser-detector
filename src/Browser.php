@@ -1,59 +1,59 @@
 <?php
 
-namespace apanly\BrowserDetector;
+namespace ank\BrowserDetector;
 
 /**
  * Browser Detection.
  */
 class Browser
 {
-    const UNKNOWN = 'unknown';
-    const VIVALDI = 'Vivaldi';
-    const OPERA = 'Opera';
-    const OPERA_MINI = 'Opera Mini';
-    const WEBTV = 'WebTV';
-    const IE = 'Internet Explorer';
-    const POCKET_IE = 'Pocket Internet Explorer';
-    const KONQUEROR = 'Konqueror';
-    const ICAB = 'iCab';
-    const OMNIWEB = 'OmniWeb';
-    const FIREBIRD = 'Firebird';
-    const FIREFOX = 'Firefox';
-    const SEAMONKEY = 'SeaMonkey';
-    const ICEWEASEL = 'Iceweasel';
-    const SHIRETOKO = 'Shiretoko';
-    const MOZILLA = 'Mozilla';
-    const AMAYA = 'Amaya';
-    const LYNX = 'Lynx';
-    const SAFARI = 'Safari';
-    const CHROME = 'Chrome';
-    const NAVIGATOR = 'Navigator';
-    const GOOGLEBOT = 'GoogleBot';
-    const SLURP = 'Yahoo! Slurp';
-    const W3CVALIDATOR = 'W3C Validator';
-    const BLACKBERRY = 'BlackBerry';
-    const ICECAT = 'IceCat';
-    const NOKIA_S60 = 'Nokia S60 OSS Browser';
-    const NOKIA = 'Nokia Browser';
-    const MSN = 'MSN Browser';
-    const MSNBOT = 'MSN Bot';
+    const UNKNOWN            = 'unknown';
+    const VIVALDI            = 'Vivaldi';
+    const OPERA              = 'Opera';
+    const OPERA_MINI         = 'Opera Mini';
+    const WEBTV              = 'WebTV';
+    const IE                 = 'Internet Explorer';
+    const POCKET_IE          = 'Pocket Internet Explorer';
+    const KONQUEROR          = 'Konqueror';
+    const ICAB               = 'iCab';
+    const OMNIWEB            = 'OmniWeb';
+    const FIREBIRD           = 'Firebird';
+    const FIREFOX            = 'Firefox';
+    const SEAMONKEY          = 'SeaMonkey';
+    const ICEWEASEL          = 'Iceweasel';
+    const SHIRETOKO          = 'Shiretoko';
+    const MOZILLA            = 'Mozilla';
+    const AMAYA              = 'Amaya';
+    const LYNX               = 'Lynx';
+    const SAFARI             = 'Safari';
+    const CHROME             = 'Chrome';
+    const NAVIGATOR          = 'Navigator';
+    const GOOGLEBOT          = 'GoogleBot';
+    const SLURP              = 'Yahoo! Slurp';
+    const W3CVALIDATOR       = 'W3C Validator';
+    const BLACKBERRY         = 'BlackBerry';
+    const ICECAT             = 'IceCat';
+    const NOKIA_S60          = 'Nokia S60 OSS Browser';
+    const NOKIA              = 'Nokia Browser';
+    const MSN                = 'MSN Browser';
+    const MSNBOT             = 'MSN Bot';
     const NETSCAPE_NAVIGATOR = 'Netscape Navigator';
-    const GALEON = 'Galeon';
-    const NETPOSITIVE = 'NetPositive';
-    const PHOENIX = 'Phoenix';
-    const GSA = 'Google Search Appliance';
-    const YANDEX = 'Yandex';
-    const EDGE = 'Edge';
-    const DRAGON = 'Dragon';
-	const BAIDUBOT = 'BaiduBot';
-	const SOGOUBOT = 'SogouBot';
+    const GALEON             = 'Galeon';
+    const NETPOSITIVE        = 'NetPositive';
+    const PHOENIX            = 'Phoenix';
+    const GSA                = 'Google Search Appliance';
+    const YANDEX             = 'Yandex';
+    const EDGE               = 'Edge';
+    const DRAGON             = 'Dragon';
+    const BAIDUBOT           = 'BaiduBot';
+    const SOGOUBOT           = 'SogouBot';
 
-	/*国产浏览器，基本都是基于webkit的,所有很容易误判为chrome*/
-	const UC = 'UC';
-	const BAIDU = 'Baidu';
-	const QQ = 'QQ';
-	const B360 = '360';
-	const LIEBAO = 'LieBao';
+    /*国产浏览器，基本都是基于webkit的,所有很容易误判为chrome*/
+    const UC     = 'UC';
+    const BAIDU  = 'Baidu';
+    const QQ     = 'QQ';
+    const B360   = '360';
+    const LIEBAO = 'LieBao';
 
     const VERSION_UNKNOWN = 'unknown';
 
@@ -116,7 +116,7 @@ class Browser
      */
     public function setName($name)
     {
-        $this->name = (string)$name;
+        $this->name = (string) $name;
 
         return $this;
     }
@@ -156,7 +156,7 @@ class Browser
      */
     public function setVersion($version)
     {
-        $this->version = (string)$version;
+        $this->version = (string) $version;
 
         return $this;
     }
@@ -184,7 +184,7 @@ class Browser
      */
     public function setIsRobot($isRobot)
     {
-        $this->isRobot = (bool)$isRobot;
+        $this->isRobot = (bool) $isRobot;
 
         return $this;
     }
@@ -218,7 +218,7 @@ class Browser
      */
     public function setIsChromeFrame($isChromeFrame)
     {
-        $this->isChromeFrame = (bool)$isChromeFrame;
+        $this->isChromeFrame = (bool) $isChromeFrame;
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace apanly\BrowserDetector;
+namespace ank\BrowserDetector;
 
 class OsDetector implements DetectorInterface
 {
@@ -176,7 +176,7 @@ class OsDetector implements DetectorInterface
                             $os->setVersion('NT 4.0');
                             break;
                         default:
-                            if ((float)$matches[1] >= 10.0) {
+                            if ((float) $matches[1] >= 10.0) {
                                 $os->setVersion($matches[1]);
                             }
                             break;
@@ -212,7 +212,7 @@ class OsDetector implements DetectorInterface
 
         return false;
     }
-    
+
     /**
      * Determine if the user's operating system is Windows Phone.
      *
@@ -229,10 +229,10 @@ class OsDetector implements DetectorInterface
             // Windows version
             if (preg_match('/Windows Phone ([\d\.]*)/i', $userAgent->getUserAgentString(), $matches)) {
                 if (isset($matches[1])) {
-                    $os->setVersion((float)$matches[1]);
+                    $os->setVersion((float) $matches[1]);
                 }
             }
-    
+
             return true;
         }
         return false;

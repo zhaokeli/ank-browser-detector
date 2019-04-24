@@ -1,30 +1,30 @@
 <?php
 
-namespace apanly\BrowserDetector;
+namespace ank\BrowserDetector;
 
 /**
  * OS Detection.
  */
 class Os
 {
-    const UNKNOWN = 'unknown';
-    const OSX = 'OS X';
-    const IOS = 'iOS';
-    const SYMBOS = 'SymbOS';
-    const WINDOWS = 'Windows';
-    const ANDROID = 'Android';
-    const LINUX = 'Linux';
-    const NOKIA = 'Nokia';
-    const BLACKBERRY = 'BlackBerry';
-    const FREEBSD = 'FreeBSD';
-    const OPENBSD = 'OpenBSD';
-    const NETBSD = 'NetBSD';
-    const OPENSOLARIS = 'OpenSolaris';
-    const SUNOS = 'SunOS';
-    const OS2 = 'OS2';
-    const BEOS = 'BeOS';
+    const UNKNOWN       = 'unknown';
+    const OSX           = 'OS X';
+    const IOS           = 'iOS';
+    const SYMBOS        = 'SymbOS';
+    const WINDOWS       = 'Windows';
+    const ANDROID       = 'Android';
+    const LINUX         = 'Linux';
+    const NOKIA         = 'Nokia';
+    const BLACKBERRY    = 'BlackBerry';
+    const FREEBSD       = 'FreeBSD';
+    const OPENBSD       = 'OpenBSD';
+    const NETBSD        = 'NetBSD';
+    const OPENSOLARIS   = 'OpenSolaris';
+    const SUNOS         = 'SunOS';
+    const OS2           = 'OS2';
+    const BEOS          = 'BeOS';
     const WINDOWS_PHONE = 'Windows Phone';
-    const CHROME_OS = 'Chrome OS';
+    const CHROME_OS     = 'Chrome OS';
 
     const VERSION_UNKNOWN = 'unknown';
 
@@ -87,7 +87,7 @@ class Os
      */
     public function setName($name)
     {
-        $this->name = (string)$name;
+        $this->name = (string) $name;
 
         return $this;
     }
@@ -100,11 +100,11 @@ class Os
     public function getVersion()
     {
         if (isset($this->version)) {
-            return (string)$this->version;
+            return (string) $this->version;
         } else {
             OsDetector::detect($this, $this->getUserAgent());
 
-            return (string)$this->version;
+            return (string) $this->version;
         }
     }
 
@@ -117,7 +117,7 @@ class Os
      */
     public function setVersion($version)
     {
-        $this->version = (string)$version;
+        $this->version = (string) $version;
 
         return $this;
     }
@@ -151,7 +151,7 @@ class Os
      */
     public function setIsMobile($isMobile = true)
     {
-        $this->isMobile = (bool)$isMobile;
+        $this->isMobile = (bool) $isMobile;
     }
 
     /**

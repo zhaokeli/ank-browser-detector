@@ -1,6 +1,6 @@
 <?php
 
-namespace apanly\BrowserDetector;
+namespace ank\BrowserDetector;
 
 class UserAgent
 {
@@ -26,7 +26,7 @@ class UserAgent
      */
     public function setUserAgentString($userAgentString)
     {
-        $this->userAgentString = (string)$userAgentString;
+        $this->userAgentString = (string) $userAgentString;
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace apanly\BrowserDetector;
+namespace ank\BrowserDetector;
 
 class LanguageDetector implements DetectorInterface
 {
@@ -15,7 +15,7 @@ class LanguageDetector implements DetectorInterface
     public static function detect(Language $language, AcceptLanguage $acceptLanguage)
     {
         $acceptLanguageString = $acceptLanguage->getAcceptLanguageString();
-        $languages = array();
+        $languages            = array();
         $language->setLanguages($languages);
 
         if (!empty($acceptLanguageString)) {

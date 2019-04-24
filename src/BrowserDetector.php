@@ -1,6 +1,6 @@
 <?php
 
-namespace apanly\BrowserDetector;
+namespace ank\BrowserDetector;
 
 class BrowserDetector implements DetectorInterface
 {
@@ -43,10 +43,10 @@ class BrowserDetector implements DetectorInterface
         'SeaMonkey',
         'Firefox',
         'Yandex',
-		"BAIDU",
-		"UC",
-		"QQ",
-		"LIEBAO",
+        "BAIDU",
+        "UC",
+        "QQ",
+        "LIEBAO",
         'Chrome',
         'OmniWeb',
         // common mobile
@@ -431,7 +431,7 @@ class BrowserDetector implements DetectorInterface
         if (stripos(self::$userAgentString, 'Edge') !== false) {
             $version = explode('Edge/', self::$userAgentString);
             if (isset($version[1])) {
-                self::$browser->setVersion((float)$version[1]);
+                self::$browser->setVersion((float) $version[1]);
             }
             self::$browser->setName(Browser::EDGE);
 
@@ -512,7 +512,7 @@ class BrowserDetector implements DetectorInterface
     public static function checkBrowserGaleon()
     {
         if (stripos(self::$userAgentString, 'galeon') !== false) {
-            $aresult = explode(' ', stristr(self::$userAgentString, 'galeon'));
+            $aresult  = explode(' ', stristr(self::$userAgentString, 'galeon'));
             $aversion = explode('/', $aresult[0]);
             if (isset($aversion[1])) {
                 self::$browser->setVersion($aversion[1]);
@@ -533,7 +533,7 @@ class BrowserDetector implements DetectorInterface
     public static function checkBrowserKonqueror()
     {
         if (stripos(self::$userAgentString, 'Konqueror') !== false) {
-            $aresult = explode(' ', stristr(self::$userAgentString, 'Konqueror'));
+            $aresult  = explode(' ', stristr(self::$userAgentString, 'Konqueror'));
             $aversion = explode('/', $aresult[0]);
             if (isset($aversion[1])) {
                 self::$browser->setVersion($aversion[1]);
@@ -574,7 +574,7 @@ class BrowserDetector implements DetectorInterface
     public static function checkBrowserOmniWeb()
     {
         if (stripos(self::$userAgentString, 'omniweb') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'omniweb'));
+            $aresult  = explode('/', stristr(self::$userAgentString, 'omniweb'));
             $aversion = explode(' ', isset($aresult[1]) ? $aresult[1] : '');
             self::$browser->setVersion($aversion[0]);
             self::$browser->setName(Browser::OMNIWEB);
@@ -842,7 +842,7 @@ class BrowserDetector implements DetectorInterface
     public static function checkBrowserLynx()
     {
         if (stripos(self::$userAgentString, 'lynx') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'Lynx'));
+            $aresult  = explode('/', stristr(self::$userAgentString, 'Lynx'));
             $aversion = explode(' ', (isset($aresult[1]) ? $aresult[1] : ''));
             self::$browser->setVersion($aversion[0]);
             self::$browser->setName(Browser::LYNX);
@@ -917,7 +917,7 @@ class BrowserDetector implements DetectorInterface
 
         return false;
     }
-    
+
     /**
      * Determine if the browser is Comodo Dragon / Ice Dragon / Chromodo.
      *
@@ -964,68 +964,71 @@ class BrowserDetector implements DetectorInterface
     }
 
     /* check uc browser*/
-	public static function checkBrowserUC(){
-		if ( stripos(self::$userAgentString, 'UBrowser') !== false) {
-			$aresult = explode('/', stristr(self::$userAgentString, 'UBrowser') );
-			if (isset($aresult[1])) {
-				$aversion = explode(' ', $aresult[1]);
-				self::$browser->setVersion($aversion[0]);
-			}
-			self::$browser->setName(Browser::UC);
-			return true;
-		}
+    public static function checkBrowserUC()
+    {
+        if (stripos(self::$userAgentString, 'UBrowser') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'UBrowser'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName(Browser::UC);
+            return true;
+        }
 
-		if ( stripos(self::$userAgentString, 'UCBrowser') !== false) {
-			$aresult = explode('/', stristr(self::$userAgentString, 'UCBrowser') );
-			if (isset($aresult[1])) {
-				$aversion = explode(' ', $aresult[1]);
-				self::$browser->setVersion($aversion[0]);
-			}
-			self::$browser->setName(Browser::UC);
-			return true;
-		}
+        if (stripos(self::$userAgentString, 'UCBrowser') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'UCBrowser'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName(Browser::UC);
+            return true;
+        }
 
+        return false;
+    }
 
-		return false;
-	}
+    /* check baidu browser*/
+    public static function checkBrowserBAIDU()
+    {
+        if (stripos(self::$userAgentString, 'BIDUBrowser') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'BIDUBrowser'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName(Browser::BAIDU);
+            return true;
+        }
 
-	/* check baidu browser*/
-	public static function checkBrowserBAIDU(){
-		if (stripos(self::$userAgentString, 'BIDUBrowser') !== false) {
-			$aresult = explode('/', stristr(self::$userAgentString, 'BIDUBrowser') );
-			if (isset($aresult[1])) {
-				$aversion = explode(' ', $aresult[1]);
-				self::$browser->setVersion($aversion[0]);
-			}
-			self::$browser->setName(Browser::BAIDU);
-			return true;
-		}
+        return false;
+    }
 
-		return false;
-	}
+    /* check qq browser*/
+    public static function checkBrowserQQ()
+    {
+        if (stripos(self::$userAgentString, 'QQBrowser') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'QQBrowser'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName(Browser::QQ);
+            return true;
+        }
 
-	/* check qq browser*/
-	public static function checkBrowserQQ(){
-		if (stripos(self::$userAgentString, 'QQBrowser') !== false) {
-			$aresult = explode('/', stristr(self::$userAgentString, 'QQBrowser') );
-			if (isset($aresult[1])) {
-				$aversion = explode(' ', $aresult[1]);
-				self::$browser->setVersion($aversion[0]);
-			}
-			self::$browser->setName(Browser::QQ);
-			return true;
-		}
+        return false;
+    }
 
-		return false;
-	}
+    /* check 猎豹 browser*/
+    public static function checkBrowserLIEBAO()
+    {
+        if (stripos(self::$userAgentString, 'LBBROWSER') !== false) {
+            self::$browser->setName(Browser::LIEBAO);
+            return true;
+        }
 
-	/* check 猎豹 browser*/
-	public static function checkBrowserLIEBAO(){
-		if (stripos(self::$userAgentString, 'LBBROWSER') !== false) {
-			self::$browser->setName(Browser::LIEBAO);
-			return true;
-		}
-
-		return false;
-	}
+        return false;
+    }
 }
