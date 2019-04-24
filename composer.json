@@ -1,11 +1,12 @@
 {
     "name": "mokuyu/browser-detector",
+    "minimum-stability": "dev",
     "description": "根据UA判断浏览器类型和版本，操作系统，设备型号 ",
     "keywords": ["browser", "os", "operating system", "language", "detection", "浏览器", "操作系统", "设备型号"],
     "authors": [
     {
-        "name": "apanly",
-        "email": "apanly@163.com"
+        "name": "ank",
+        "email": "735579768@qq.com"
     }],
     "homepage": "http://www.zhaokeli.com",
     "license": "MIT",
@@ -18,6 +19,13 @@
         "psr-4":
         {
             "ank\\BrowserDetector\\": "src"
+        }
+    }
+    "extra":
+    {
+        "branch-alias":
+        {
+            "dev-master": "1.0.x-dev"
         }
     }
 }
