@@ -70,6 +70,7 @@ class BrowserDetector implements DetectorInterface
         'IceCat',
         'Iceweasel',
         'Mozilla', /* Mozilla is such an open standard that you must check it last */
+        'Maxthon', //遨游
     );
 
     /**
@@ -1026,6 +1027,16 @@ class BrowserDetector implements DetectorInterface
     {
         if (stripos(self::$userAgentString, 'LBBROWSER') !== false) {
             self::$browser->setName(Browser::LIEBAO);
+            return true;
+        }
+
+        return false;
+    }
+    public function checkBrowserMaxthon()
+    {
+        if (preg_match('/Maxthon\/(.+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName(Browser::AOYOU);
+            self::$browser->setVersion($mat[0]);
             return true;
         }
 
