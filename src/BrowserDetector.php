@@ -1097,6 +1097,7 @@ class BrowserDetector implements DetectorInterface
     {
         // Mozilla/5.0 (Linux; Android 5.1; zh-cn; HUAWEI CUN-AL00 Build/CUN-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
         //Mozilla/5.0 (Linux; Android 9; COR-AL00 Build/HUAWEICOR-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
+        //Mozilla/5.0 (Linux; Android 7.0; BLN-AL40 Build/HONORBLN-AL40) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.0.0 Mobile Safari/537.36
         if (preg_match('/HuaweiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
             self::$browser->setName('HuaWei');
             self::$browser->setVersion($mat[1]);
@@ -1105,6 +1106,7 @@ class BrowserDetector implements DetectorInterface
 
         if (stripos(self::$userAgentString, ' HUAWEI ') !== false
             || stripos(self::$userAgentString, 'Build/HUAWEI') !== false
+            || stripos(self::$userAgentString, 'Build/HONOR') !== false
         ) {
             self::$browser->setName('HuaWei');
             self::$browser->setVersion('0');
