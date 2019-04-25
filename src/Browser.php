@@ -54,6 +54,7 @@ class Browser
     const QQ     = 'QQ';
     const B360   = '360';
     const LIEBAO = 'LieBao';
+    const AOYOU  = 'Maxthon';
 
     const VERSION_UNKNOWN = 'unknown';
 
