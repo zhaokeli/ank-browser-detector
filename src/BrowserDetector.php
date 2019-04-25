@@ -1096,13 +1096,16 @@ class BrowserDetector implements DetectorInterface
     public static function checkBrowserHuaWei()
     {
         // Mozilla/5.0 (Linux; Android 5.1; zh-cn; HUAWEI CUN-AL00 Build/CUN-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
+        //Mozilla/5.0 (Linux; Android 9; COR-AL00 Build/HUAWEICOR-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
         if (preg_match('/HuaweiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
             self::$browser->setName('HuaWei');
             self::$browser->setVersion($mat[1]);
             return true;
         }
 
-        if (stripos(self::$userAgentString, ' HUAWEI ') !== false) {
+        if (stripos(self::$userAgentString, ' HUAWEI ') !== false
+            || stripos(self::$userAgentString, 'Build/HUAWEI') !== false
+        ) {
             self::$browser->setName('HuaWei');
             self::$browser->setVersion('0');
             return true;
