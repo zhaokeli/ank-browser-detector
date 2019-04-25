@@ -1124,7 +1124,7 @@ class BrowserDetector implements DetectorInterface
     }
     public static function checkBrowser360SE()
     {
-        if (stripos($self::$userAgentString, '360SE') !== false) {
+        if (stripos(self::$userAgentString, '360SE') !== false) {
             self::$browser->setName('360SE');
             if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
                 self::$browser->setVersion($mat[1]);
@@ -1137,7 +1137,7 @@ class BrowserDetector implements DetectorInterface
     }
     public static function checkBrowser360EE()
     {
-        if (stripos($self::$userAgentString, '360EE') !== false) {
+        if (stripos(self::$userAgentString, '360EE') !== false) {
             self::$browser->setName('360EE');
             if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
                 self::$browser->setVersion($mat[1]);
