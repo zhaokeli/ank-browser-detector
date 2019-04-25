@@ -1057,7 +1057,7 @@ class BrowserDetector implements DetectorInterface
     {
         if (preg_match('/(Mb)?2345Explorer\/([\.\d]+)/i', self::$userAgentString, $mat)) {
             self::$browser->setName('2345Explorer');
-            self::$browser->setVersion($mat[1]);
+            self::$browser->setVersion($mat[2]);
             return true;
         }
 
