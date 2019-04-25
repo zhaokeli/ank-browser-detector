@@ -49,13 +49,12 @@ class Browser
     const SOGOUBOT           = 'SogouBot';
 
     /*国产浏览器，基本都是基于webkit的,所有很容易误判为chrome*/
-    const UC     = 'UC';
-    const BAIDU  = 'Baidu';
-    const QQ     = 'QQ';
-    const B360   = '360';
-    const LIEBAO = 'LieBao';
-    const AOYOU  = 'Maxthon';
-
+    const UC              = 'UC';
+    const BAIDU           = 'Baidu';
+    const QQ              = 'QQ';
+    const B360            = '360';
+    const LIEBAO          = 'LieBao';
+    const AOYOU           = 'Maxthon';
     const VERSION_UNKNOWN = 'unknown';
 
     /**

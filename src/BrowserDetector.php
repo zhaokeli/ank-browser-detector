@@ -47,7 +47,18 @@ class BrowserDetector implements DetectorInterface
         "UC",
         "QQ",
         "LIEBAO",
-        'Chrome',
+        'Maxthon', //遨游
+        'SouGou',
+        '2345Explorer',
+        'MiuiBrowser',
+        'baiduboxapp',
+        'SouGou',
+        'HuaWei',
+        'Samsung',
+        'Oppo',
+        '360SE', //360安全
+        '360EE', //360急速
+        'Chrome', //chrome内核的国内浏览器要放在它之前,只要里面带有chrome都要放它前面
         'OmniWeb',
         // common mobile
         'Android',
@@ -70,7 +81,6 @@ class BrowserDetector implements DetectorInterface
         'IceCat',
         'Iceweasel',
         'Mozilla', /* Mozilla is such an open standard that you must check it last */
-        'Maxthon', //遨游
     );
 
     /**
@@ -1032,14 +1042,110 @@ class BrowserDetector implements DetectorInterface
 
         return false;
     }
-    public function checkBrowserMaxthon()
+    public static function checkBrowserMaxthon()
     {
         if (preg_match('/Maxthon\/(.+)/i', self::$userAgentString, $mat)) {
             self::$browser->setName(Browser::AOYOU);
-            self::$browser->setVersion($mat[0]);
+            self::$browser->setVersion($mat[1]);
             return true;
         }
 
+        return false;
+    }
+    public static function checkBrowser2345Explorer()
+    {
+        if (preg_match('/2345Explorer\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName('2345Explorer');
+            self::$browser->setVersion($mat[1]);
+            return true;
+        }
+
+        return false;
+    }
+    public static function checkBrowserMiuiBrowser()
+    {
+        if (preg_match('/MiuiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName('MiuiBrowser');
+            self::$browser->setVersion($mat[1]);
+            return true;
+        }
+
+        return false;
+    }
+    public static function checkBrowserBaiduBoxApp()
+    {
+        if (preg_match('/baiduboxapp\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName('BaiduBoxApp');
+            self::$browser->setVersion($mat[1]);
+            return true;
+        }
+
+        return false;
+    }
+    public static function checkBrowserSouGou()
+    {
+        if (preg_match('/\sSE\s(.*?)\sMetaSr/i', self::$userAgentString, $mat)) {
+            self::$browser->setName('SouGou');
+            self::$browser->setVersion($mat[1]);
+            return true;
+        }
+
+        return false;
+    }
+    public static function checkBrowserHuaWei()
+    {
+        if (preg_match('/HuaweiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName('HuaWei');
+            self::$browser->setVersion($mat[1]);
+            return true;
+        }
+
+        return false;
+    }
+    public static function checkBrowserSamsung()
+    {
+        if (preg_match('/SamsungBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName('Samsung');
+            self::$browser->setVersion($mat[1]);
+            return true;
+        }
+
+        return false;
+    }
+    public static function checkBrowserOppo()
+    {
+        if (preg_match('/OppoBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName('Oppo');
+            self::$browser->setVersion($mat[1]);
+            return true;
+        }
+
+        return false;
+    }
+    public static function checkBrowser360SE()
+    {
+        if (stripos($self::$userAgentString, '360SE') !== false) {
+            self::$browser->setName('360SE');
+            if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+                self::$browser->setVersion($mat[1]);
+            } else {
+                self::$browser->setVersion('0.0');
+            }
+            return true;
+        }
+        return false;
+    }
+    public static function checkBrowser360EE()
+    {
+        if (stripos($self::$userAgentString, '360EE') !== false) {
+            self::$browser->setName('360EE');
+            if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+                self::$browser->setVersion($mat[1]);
+            } else {
+                self::$browser->setVersion('0.0');
+            }
+            return true;
+        }
         return false;
     }
 }
