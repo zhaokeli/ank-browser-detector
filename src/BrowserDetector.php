@@ -62,20 +62,20 @@ class BrowserDetector implements DetectorInterface
         '360EE'                  => '360急速',
         'Vivo'                   => 'Vivo',
         //chrome内核的国内浏览器要放在它之前,只要里面带有chrome都要放它前面
-        'Chrome'                 => 'Chrome',
+        'Chrome'                 => '谷歌',
         'OmniWeb'                => 'OmniWeb',
         // common mobile
-        'Android'                => 'Android',
-        'BlackBerry'             => 'BlackBerry',
+        'Android'                => '安卓',
+        'BlackBerry'             => '黑莓',
         'Nokia'                  => '诺基亚',
         'Gsa'                    => 'Gsa',
         // common bots
-        'Robot'                  => 'Robot',
+        'Robot'                  => '蜘蛛',
         // WebKit base check (post mobile and others)
         'Safari'                 => 'Safari',
         // everyone else
         'NetPositive'            => 'NetPositive',
-        'Firebird'               => 'Firebird',
+        'Firebird'               => '火鸟',
         'Konqueror'              => 'Konqueror',
         'Icab'                   => 'Icab',
         'Phoenix'                => 'Phoenix',
