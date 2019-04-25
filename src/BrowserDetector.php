@@ -58,6 +58,7 @@ class BrowserDetector implements DetectorInterface
         'Oppo',
         '360SE', //360安全
         '360EE', //360急速
+        'Vivo',
         'Chrome', //chrome内核的国内浏览器要放在它之前,只要里面带有chrome都要放它前面
         'OmniWeb',
         // common mobile
@@ -1054,7 +1055,7 @@ class BrowserDetector implements DetectorInterface
     }
     public static function checkBrowser2345Explorer()
     {
-        if (preg_match('/2345Explorer\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+        if (preg_match('/(Mb)?2345Explorer\/([\.\d]+)/i', self::$userAgentString, $mat)) {
             self::$browser->setName('2345Explorer');
             self::$browser->setVersion($mat[1]);
             return true;
@@ -1094,18 +1095,34 @@ class BrowserDetector implements DetectorInterface
     }
     public static function checkBrowserHuaWei()
     {
+        // Mozilla/5.0 (Linux; Android 5.1; zh-cn; HUAWEI CUN-AL00 Build/CUN-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
         if (preg_match('/HuaweiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
             self::$browser->setName('HuaWei');
             self::$browser->setVersion($mat[1]);
             return true;
         }
 
+        if (stripos(self::$userAgentString, ' HUAWEI ') !== false) {
+            self::$browser->setName('HuaWei');
+            self::$browser->setVersion('0');
+            return true;
+        }
         return false;
     }
     public static function checkBrowserSamsung()
     {
         if (preg_match('/SamsungBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
             self::$browser->setName('Samsung');
+            self::$browser->setVersion($mat[1]);
+            return true;
+        }
+
+        return false;
+    }
+    public static function checkBrowserVivo()
+    {
+        if (preg_match('/VivoBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName('VivoBrowser');
             self::$browser->setVersion($mat[1]);
             return true;
         }
@@ -1129,7 +1146,7 @@ class BrowserDetector implements DetectorInterface
             if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
                 self::$browser->setVersion($mat[1]);
             } else {
-                self::$browser->setVersion('0.0');
+                self::$browser->setVersion('0');
             }
             return true;
         }
@@ -1142,7 +1159,7 @@ class BrowserDetector implements DetectorInterface
             if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
                 self::$browser->setVersion($mat[1]);
             } else {
-                self::$browser->setVersion('0.0');
+                self::$browser->setVersion('0');
             }
             return true;
         }
