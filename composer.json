@@ -12,7 +12,8 @@
     "license": "MIT",
     "require":
     {
-        "php": "^5.3.3 || ^7.0"
+        "php": "^5.3.3 || ^7.0",
+        "jaybizzle/crawler-detect": "~1.2"
     },
     "autoload":
     {
