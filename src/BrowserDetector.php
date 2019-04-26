@@ -2,6 +2,8 @@
 
 namespace ank\BrowserDetector;
 
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
+
 class BrowserDetector implements DetectorInterface
 {
     const FUNC_PREFIX = 'checkBrowser';
@@ -12,7 +14,11 @@ class BrowserDetector implements DetectorInterface
      * @var Browser
      */
     protected static $browser;
-
+    //正则里必须有两个分组,如果第二个值有值的话会被设置成蜘蛛名字
+    protected static $spider_pattern = [
+        ['/(BingPreview)\/([\.\d]+)/i', 'BingSpider-Render'],
+        ['/(Baiduspider\-render)\/([\.\d]+)/i', 'BaiduSpider-Render'],
+    ];
     protected static $browsersList = array(
         // well-known, well-used
         // Special Notes:
@@ -189,16 +195,37 @@ class BrowserDetector implements DetectorInterface
      */
     public static function checkBrowserRobot($name, $title)
     {
-        if (stripos(self::$userAgentString, 'bot') !== false ||
-            stripos(self::$userAgentString, 'spider') !== false ||
-            stripos(self::$userAgentString, 'crawler') !== false ||
-            stripos(self::$userAgentString, 'spider') !== false
-        ) {
+        // if (stripos(self::$userAgentString, 'bot') !== false ||
+        //     stripos(self::$userAgentString, 'spider') !== false ||
+        //     stripos(self::$userAgentString, 'crawler') !== false ||
+        //     stripos(self::$userAgentString, 'spider') !== false
+        // ) {
+        //     self::$browser->setIsRobot(true);
+
+        //     return true;
+        // }
+
+        // return false;
+
+        $spider = new CrawlerDetect();
+        if ($spider->isCrawler()) {
             self::$browser->setIsRobot(true);
-
+            self::$browser->setName($spider->getMatches());
+            self::$browser->setVersion(0);
             return true;
-        }
+        } else {
+            // $userAgent = ' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
 
+            foreach (self::$spider_pattern as $key => $value) {
+                if (preg_match($value[0], self::$userAgentString, $mat)) {
+                    self::$browser->setIsRobot(true);
+                    self::$browser->setName($value[1] ?: $mat[1]);
+                    self::$browser->setVersion(isset($mat[2]) ? $mat[2] : '0.0');
+                    return true;
+                }
+            }
+
+        }
         return false;
     }
 
