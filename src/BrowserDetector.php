@@ -206,6 +206,15 @@ class BrowserDetector implements DetectorInterface
         // }
 
         // return false;
+        // $userAgent = ' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
+        foreach (self::$spider_pattern as $key => $value) {
+            if (preg_match($value[0], self::$userAgentString, $mat)) {
+                self::$browser->setIsRobot(true);
+                self::$browser->setName($value[1] ?: $mat[1]);
+                self::$browser->setVersion(isset($mat[2]) ? $mat[2] : '0.0');
+                return true;
+            }
+        }
 
         $spider = new CrawlerDetect(null, self::$userAgentString);
         if ($spider->isCrawler()) {
@@ -213,18 +222,6 @@ class BrowserDetector implements DetectorInterface
             self::$browser->setName($spider->getMatches());
             self::$browser->setVersion(0);
             return true;
-        } else {
-            // $userAgent = ' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
-
-            foreach (self::$spider_pattern as $key => $value) {
-                if (preg_match($value[0], self::$userAgentString, $mat)) {
-                    self::$browser->setIsRobot(true);
-                    self::$browser->setName($value[1] ?: $mat[1]);
-                    self::$browser->setVersion(isset($mat[2]) ? $mat[2] : '0.0');
-                    return true;
-                }
-            }
-
         }
         return false;
     }
