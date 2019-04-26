@@ -119,6 +119,7 @@ $userAgent = 'Mozilla/5.0 (Linux; U; Android 8.0.0;zh-cn; DUK-AL20 Build/HUAWEID
 // $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
 // $userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1 (compatible; Baiduspider-render/2.0; +http://www.baidu.com/search/spider.html)';
 $browser = new Browser($userAgent);
+echo var_dump($browser->isRobot());
 echo $browser->getName() . "\n";
 echo $browser->getVersion() . "\n";
 
