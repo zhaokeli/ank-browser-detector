@@ -90,7 +90,7 @@ browser-detector
     composer require mokuyu/browser-detector
 
 ### 使用
-
+```
 use ank\BrowserDetector\Browser;
 use ank\BrowserDetector\Device;
 use ank\BrowserDetector\Os;
@@ -134,7 +134,7 @@ echo $device->getName() . "\n";
 if ($device->getName() === Device::IPAD) {
     echo 'You are using an iPad.';
 }
-
+```
 
 
 
