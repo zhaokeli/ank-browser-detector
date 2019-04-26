@@ -207,7 +207,7 @@ class BrowserDetector implements DetectorInterface
 
         // return false;
 
-        $spider = new CrawlerDetect();
+        $spider = new CrawlerDetect(null, self::$userAgentString);
         if ($spider->isCrawler()) {
             self::$browser->setIsRobot(true);
             self::$browser->setName($spider->getMatches());
