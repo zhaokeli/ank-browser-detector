@@ -1,7 +1,7 @@
 browser-detector
 ===================
 ### 主要作用
-* 根据UA判断浏览器类型和版本，
+* 根据UA判断浏览器类型和版本(包含蜘蛛访问)，
 * 根据UA判断操作系统和版本号
 * 根据UA判断设备
 
@@ -91,7 +91,7 @@ browser-detector
 
 ### 使用
 
-  use ank\BrowserDetector\Browser;
+use ank\BrowserDetector\Browser;
 use ank\BrowserDetector\Device;
 use ank\BrowserDetector\Os;
 //qq浏览器
@@ -116,6 +116,8 @@ $userAgent = 'Mozilla/5.0 (Linux; U; Android 8.0.0;zh-cn; DUK-AL20 Build/HUAWEID
 // $userAgent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36 QIHU 360EE';
 // $userAgent = 'Mozilla/5.0 (Linux; Android 8.1.0; vivo X21A Build/OPM1.171019.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36 VivoBrowser/6.2.0.5';
 // $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.90 Safari/537.36 2345Explorer/9.7.0.18838';
+// $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
+// $userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1 (compatible; Baiduspider-render/2.0; +http://www.baidu.com/search/spider.html)';
 $browser = new Browser($userAgent);
 echo $browser->getName() . "\n";
 echo $browser->getVersion() . "\n";
@@ -132,6 +134,7 @@ echo $device->getName() . "\n";
 if ($device->getName() === Device::IPAD) {
     echo 'You are using an iPad.';
 }
+
 
 
 
