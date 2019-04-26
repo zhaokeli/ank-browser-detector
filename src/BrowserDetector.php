@@ -16,8 +16,8 @@ class BrowserDetector implements DetectorInterface
     protected static $browser;
     //正则里必须有两个分组,如果第二个值有值的话会被设置成蜘蛛名字
     protected static $spider_pattern = [
-        ['/(BingPreview)\/([\.\d]+)/i', 'BingSpider-Render'],
-        ['/(Baiduspider\-render)\/([\.\d]+)/i', 'BaiduSpider-Render'],
+        ['/(BingPreview)\/([\.\d]+)/i', 'BingRender'],
+        ['/(Baiduspider\-render)\/([\.\d]+)/i', 'BaiduRender'],
     ];
     protected static $browsersList = array(
         // well-known, well-used
