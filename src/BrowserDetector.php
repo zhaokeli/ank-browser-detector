@@ -14,7 +14,7 @@ class BrowserDetector implements DetectorInterface
      * @var Browser
      */
     protected static $browser;
-    protected static $zhizhu_ips = [
+    protected static $spider_ips = [
         [
             'title' => '360蜘蛛',
             'ips'   => [
@@ -261,7 +261,7 @@ class BrowserDetector implements DetectorInterface
             $ip = self::getClientIp();
         }
         //百度蜘蛛ip段
-        foreach (self::$zhizhu_ips as $key => $value) {
+        foreach (self::$spider_ips as $key => $value) {
             $ips   = $value['ips'];
             $title = $value['title'];
             foreach ($ips as $key => $value) {
