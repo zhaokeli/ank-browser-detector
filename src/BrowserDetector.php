@@ -46,7 +46,12 @@ class BrowserDetector implements DetectorInterface
         ],
         [
             'title' => '百度蜘蛛',
-            'ips'   => ['111.206.198.', '111.206.221.', '220.181.108.', '123.125.71.'],
+            'ips'   => [
+                '111.206.198.',
+                '111.206.221.',
+                '220.181.108.',
+                '123.125.71.',
+            ],
         ],
     ];
     // protected static $baidu_ips = [];
