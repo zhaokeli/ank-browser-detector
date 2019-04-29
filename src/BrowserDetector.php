@@ -14,7 +14,42 @@ class BrowserDetector implements DetectorInterface
      * @var Browser
      */
     protected static $browser;
-    protected static $baidu_ips = ['111.206.198.', '111.206.221.', '220.181.108.', '123.125.71.'];
+    protected static $zhizhu_ips = [
+        [
+            'title' => '360蜘蛛',
+            'ips'   => [
+                '180.153.232.',
+                '180.153.234.',
+                '180.153.236.',
+                '180.163.220.',
+                '42.236.101.',
+                '42.236.102.',
+                '42.236.103.',
+                '42.236.10.',
+                '42.236.12.',
+                '42.236.13.',
+                '42.236.14.',
+                '42.236.15.',
+                '42.236.16.',
+                '42.236.17.',
+                '42.236.46.',
+                '42.236.48.',
+                '42.236.49.',
+                '42.236.50.',
+                '42.236.51.',
+                '42.236.52.',
+                '42.236.53.',
+                '42.236.54.',
+                '42.236.55.',
+                '42.236.99.',
+            ],
+        ],
+        [
+            'title' => '百度蜘蛛',
+            'ips'   => ['111.206.198.', '111.206.221.', '220.181.108.', '123.125.71.'],
+        ],
+    ];
+    // protected static $baidu_ips = [];
     //正则里必须有两个分组,如果第二个值有值的话会被设置成蜘蛛名字
     protected static $spider_pattern = [
         ['/(BingPreview)\/([\.\d]+)/i', 'BingRender'],
@@ -226,13 +261,18 @@ class BrowserDetector implements DetectorInterface
             $ip = self::getClientIp();
         }
         //百度蜘蛛ip段
-        foreach (self::$baidu_ips as $key => $value) {
-            if (strpos($ip, $value) === 0) {
-                self::$browser->setIsRobot(true);
-                self::$browser->setName($title);
-                self::$browser->setVersion(0);
-                return true;
+        foreach (self::$zhizhu_ips as $key => $value) {
+            $ips   = $value['ips'];
+            $title = $value['title'];
+            foreach ($ips as $key => $value) {
+                if (strpos($ip, $value) === 0) {
+                    self::$browser->setIsRobot(true);
+                    self::$browser->setName($title);
+                    self::$browser->setVersion(0);
+                    return true;
+                }
             }
+
         }
         return false;
     }
