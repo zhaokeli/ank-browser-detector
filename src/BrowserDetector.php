@@ -39,6 +39,7 @@ class BrowserDetector implements DetectorInterface
         //     before FireFox are necessary
         // (7) Microsoft Edge must be checked before Chrome and Safari
         // (7) Vivaldi must be checked before Chrome
+        'RobotIP'                => '百度蜘蛛',
         'WebTv'                  => 'WebTv',
         'InternetExplorer'       => 'IE',
         'Edge'                   => 'Edge',
@@ -218,7 +219,23 @@ class BrowserDetector implements DetectorInterface
 
         return false;
     }
-
+    public static function checkBrowserRobotIP($name, $title)
+    {
+        $ip = self::$browser->getIP();
+        if (!$ip) {
+            $ip = self::getClientIp();
+        }
+        //百度蜘蛛ip段
+        foreach (self::$baidu_ips as $key => $value) {
+            if (strpos($ip, $value) === 0) {
+                self::$browser->setIsRobot(true);
+                self::$browser->setName($title);
+                self::$browser->setVersion(0);
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Determine if the browser is a robot.
      *
@@ -238,16 +255,7 @@ class BrowserDetector implements DetectorInterface
 
         // return false;
         // $userAgent = ' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
-        $ip = self::getClientIp();
-        //百度蜘蛛ip段
-        foreach (self::$baidu_ips as $key => $value) {
-            if (strpos($ip, $value) === 0) {
-                self::$browser->setIsRobot(true);
-                self::$browser->setName('Baidu');
-                self::$browser->setVersion(0);
-                return true;
-            }
-        }
+
         foreach (self::$spider_pattern as $key => $value) {
             if (preg_match($value[0], self::$userAgentString, $mat)) {
                 self::$browser->setIsRobot(true);

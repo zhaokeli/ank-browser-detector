@@ -61,7 +61,10 @@ class Browser
      * @var UserAgent
      */
     private $userAgent;
-
+    /**
+     * ip
+     */
+    private $ip;
     /**
      * @var string
      */
@@ -96,8 +99,9 @@ class Browser
      *
      * @throws \apanly\BrowserDetector\InvalidArgumentException
      */
-    public function __construct($userAgent = null)
+    public function __construct($userAgent = null, $ip = '')
     {
+        $this->ip = $ip;
         if ($userAgent instanceof UserAgent) {
             $this->setUserAgent($userAgent);
         } elseif (null === $userAgent || is_string($userAgent)) {
@@ -298,7 +302,10 @@ class Browser
     {
         return $this->userAgent;
     }
-
+    public function getIP()
+    {
+        return $this->ip;
+    }
     /**
      * @param bool
      *
