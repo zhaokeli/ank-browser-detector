@@ -14,6 +14,7 @@ class BrowserDetector implements DetectorInterface
      * @var Browser
      */
     protected static $browser;
+    protected static $baidu_ips = ['111.206.198.', '111.206.221.', '220.181.108.', '123.125.71.'];
     //正则里必须有两个分组,如果第二个值有值的话会被设置成蜘蛛名字
     protected static $spider_pattern = [
         ['/(BingPreview)\/([\.\d]+)/i', 'BingRender'],
@@ -93,7 +94,37 @@ class BrowserDetector implements DetectorInterface
         'Mozilla'                => 'Mozilla',
         /* Mozilla is such an open standard that you must check it last */
     );
+    public static function getClientIp($type = false, $adv = true)
+    {
+        $type      = $type ? 1 : 0;
+        $type      = 0;
+        static $ip = null;
+        if ($ip !== null) {
+            return $ip[$type];
+        }
 
+        if ($adv) {
+            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $pos = array_search('unknown', $arr);
+                if (false !== $pos) {
+                    unset($arr[$pos]);
+                }
+
+                $ip = trim($arr[0]);
+            } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        // IP地址合法验证
+        $long = sprintf('%u', ip2long($ip));
+        $ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
+        return $ip[$type];
+    }
     /**
      * Routine to determine the browser type.
      *
@@ -207,6 +238,16 @@ class BrowserDetector implements DetectorInterface
 
         // return false;
         // $userAgent = ' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
+        $ip = self::getClientIp();
+        //百度蜘蛛ip段
+        foreach (self::$baidu_ips as $key => $value) {
+            if (strpos($ip, $value) === 0) {
+                self::$browser->setIsRobot(true);
+                self::$browser->setName('Baidu');
+                self::$browser->setVersion(0);
+                return true;
+            }
+        }
         foreach (self::$spider_pattern as $key => $value) {
             if (preg_match($value[0], self::$userAgentString, $mat)) {
                 self::$browser->setIsRobot(true);
