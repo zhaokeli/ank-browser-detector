@@ -8,59 +8,12 @@ class BrowserDetector implements DetectorInterface
 {
     const FUNC_PREFIX = 'checkBrowser';
 
-    protected static $userAgentString;
-
     /**
      * @var Browser
      */
     protected static $browser;
-    protected static $spider_ips = [
-        [
-            'title' => '360蜘蛛',
-            'ips'   => [
-                '180.153.232.',
-                '180.153.234.',
-                '180.153.236.',
-                '180.163.220.',
-                '42.236.101.',
-                '42.236.102.',
-                '42.236.103.',
-                '42.236.10.',
-                '42.236.12.',
-                '42.236.13.',
-                '42.236.14.',
-                '42.236.15.',
-                '42.236.16.',
-                '42.236.17.',
-                '42.236.46.',
-                '42.236.48.',
-                '42.236.49.',
-                '42.236.50.',
-                '42.236.51.',
-                '42.236.52.',
-                '42.236.53.',
-                '42.236.54.',
-                '42.236.55.',
-                '42.236.99.',
-            ],
-        ],
-        [
-            'title' => '百度蜘蛛',
-            'ips'   => [
-                '111.206.198.',
-                '111.206.221.',
-                '220.181.108.',
-                '123.125.71.',
-            ],
-        ],
-    ];
-    // protected static $baidu_ips = [];
-    //正则里必须有两个分组,如果第二个值有值的话会被设置成蜘蛛名字
-    protected static $spider_pattern = [
-        ['/(BingPreview)\/([\.\d]+)/i', '必应蜘蛛'],
-        ['/(Baiduspider\-render)\/([\.\d]+)/i', '百度蜘蛛'],
-    ];
-    protected static $browsersList = array(
+
+    protected static $browsersList = [
         // well-known, well-used
         // Special Notes:
         // (1) Opera must be checked before FireFox due to the odd
@@ -134,80 +87,102 @@ class BrowserDetector implements DetectorInterface
         'Iceweasel'              => 'Iceweasel',
         'Mozilla'                => 'Mozilla',
         /* Mozilla is such an open standard that you must check it last */
-    );
-    public static function getClientIp($type = false, $adv = true)
+    ];
+
+    protected static $spider_ips = [
+        [
+            'title' => '360蜘蛛',
+            'ips'   => [
+                '180.153.232.',
+                '180.153.234.',
+                '180.153.236.',
+                '180.163.220.',
+                '42.236.101.',
+                '42.236.102.',
+                '42.236.103.',
+                '42.236.10.',
+                '42.236.12.',
+                '42.236.13.',
+                '42.236.14.',
+                '42.236.15.',
+                '42.236.16.',
+                '42.236.17.',
+                '42.236.46.',
+                '42.236.48.',
+                '42.236.49.',
+                '42.236.50.',
+                '42.236.51.',
+                '42.236.52.',
+                '42.236.53.',
+                '42.236.54.',
+                '42.236.55.',
+                '42.236.99.',
+            ],
+        ],
+        [
+            'title' => '百度蜘蛛',
+            'ips'   => [
+                '111.206.198.',
+                '111.206.221.',
+                '220.181.108.',
+                '123.125.71.',
+            ],
+        ],
+        [
+            'title' => '微软蜘蛛',
+            'ips'   => [
+                //伊利诺伊芝加哥
+                '23.100.232.233',
+            ],
+        ],
+    ];
+
+    // protected static $baidu_ips = [];
+    //正则里必须有两个分组,如果第二个值有值的话会被设置成蜘蛛名字
+    protected static $spider_pattern = [
+        ['/(BingPreview)\/([\.\d]+)/i', '必应蜘蛛'],
+        ['/(Baiduspider\-render)\/([\.\d]+)/i', '百度蜘蛛'],
+    ];
+
+    protected static $userAgentString;
+
+    public static function checkBrowser2345Explorer($name, $title)
     {
-        $type      = $type ? 1 : 0;
-        $type      = 0;
-        static $ip = null;
-        if ($ip !== null) {
-            return $ip[$type];
-        }
+        if (preg_match('/(Mb)?2345Explorer\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName($title);
+            self::$browser->setVersion($mat[2]);
 
-        if ($adv) {
-            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-                $pos = array_search('unknown', $arr);
-                if (false !== $pos) {
-                    unset($arr[$pos]);
-                }
-
-                $ip = trim($arr[0]);
-            } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-                $ip = $_SERVER['HTTP_CLIENT_IP'];
-            } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-                $ip = $_SERVER['REMOTE_ADDR'];
-            }
-        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        // IP地址合法验证
-        $long = sprintf('%u', ip2long($ip));
-        $ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
-        return $ip[$type];
-    }
-    /**
-     * Routine to determine the browser type.
-     *
-     * @param Browser $browser
-     * @param UserAgent $userAgent
-     *
-     * @return bool
-     */
-    public static function detect(Browser $browser, UserAgent $userAgent = null)
-    {
-        self::$browser = $browser;
-        if (is_null($userAgent)) {
-            $userAgent = self::$browser->getUserAgent();
-        }
-        self::$userAgentString = $userAgent->getUserAgentString();
-
-        self::$browser->setName(Browser::UNKNOWN);
-        self::$browser->setVersion(Browser::VERSION_UNKNOWN);
-
-        self::checkChromeFrame();
-        self::checkFacebookWebView();
-
-        foreach (self::$browsersList as $browserName => $title) {
-            $funcName = self::FUNC_PREFIX . $browserName;
-
-            if (self::$funcName($browserName, $title)) {
-                return true;
-            }
+            return true;
         }
 
         return false;
     }
 
-    /**
-     * Determine if the user is using Chrome Frame.
-     *
-     * @return bool
-     */
-    public static function checkChromeFrame()
+    public static function checkBrowser360EE($name, $title)
     {
-        if (strpos(self::$userAgentString, 'chromeframe') !== false) {
-            self::$browser->setIsChromeFrame(true);
+        if (stripos(self::$userAgentString, '360EE') !== false) {
+            self::$browser->setName($title);
+            if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+                self::$browser->setVersion($mat[1]);
+            } else {
+                self::$browser->setVersion('0');
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function checkBrowser360SE($name, $title)
+    {
+        if (stripos(self::$userAgentString, '360SE') !== false) {
+            self::$browser->setName($title);
+            if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+                self::$browser->setVersion($mat[1]);
+            } else {
+                self::$browser->setVersion('0');
+            }
 
             return true;
         }
@@ -216,14 +191,72 @@ class BrowserDetector implements DetectorInterface
     }
 
     /**
-     * Determine if the user is using Facebook.
+     * Determine if the browser is Amaya.
      *
      * @return bool
      */
-    public static function checkFacebookWebView()
+    public static function checkBrowserAmaya($name, $title)
     {
-        if (strpos(self::$userAgentString, 'FBAV') !== false) {
-            self::$browser->setIsFacebookWebView(true);
+        if (stripos(self::$userAgentString, 'amaya') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'Amaya'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Android.
+     *
+     * @return bool
+     */
+    public static function checkBrowserAndroid($name, $title)
+    {
+        // Navigator
+        if (stripos(self::$userAgentString, 'Android') !== false) {
+            if (preg_match('/Version\/([\d\.]*)/i', self::$userAgentString, $matches)) {
+                if (isset($matches[1])) {
+                    self::$browser->setVersion($matches[1]);
+                }
+            } else {
+                self::$browser->setVersion(Browser::VERSION_UNKNOWN);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /* check baidu browser*/
+    public static function checkBrowserBAIDU($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'BIDUBrowser') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'BIDUBrowser'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function checkBrowserBaiduBoxApp($name, $title)
+    {
+        if (preg_match('/baiduboxapp\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName($title);
+            self::$browser->setVersion($mat[1]);
 
             return true;
         }
@@ -254,69 +287,256 @@ class BrowserDetector implements DetectorInterface
                 self::$browser->setVersion('10.' . $aversion[0]);
             }
             self::$browser->setName($title);
+
             return true;
         }
 
         return false;
     }
-    public static function checkBrowserRobotIP($name, $title)
-    {
-        $ip = self::$browser->getIP();
-        if (!$ip) {
-            $ip = self::getClientIp();
-        }
-        //百度蜘蛛ip段
-        foreach (self::$spider_ips as $key => $value) {
-            $ips   = $value['ips'];
-            $title = $value['title'];
-            foreach ($ips as $key => $value) {
-                if (strpos($ip, $value) === 0) {
-                    self::$browser->setIsRobot(true);
-                    self::$browser->setName($title);
-                    self::$browser->setVersion(0);
-                    return true;
-                }
-            }
 
-        }
-        return false;
-    }
     /**
-     * Determine if the browser is a robot.
+     * Determine if the browser is Chrome.
      *
      * @return bool
      */
-    public static function checkBrowserRobot($name, $title)
+    public static function checkBrowserChrome($name, $title)
     {
-        // if (stripos(self::$userAgentString, 'bot') !== false ||
-        //     stripos(self::$userAgentString, 'spider') !== false ||
-        //     stripos(self::$userAgentString, 'crawler') !== false ||
-        //     stripos(self::$userAgentString, 'spider') !== false
-        // ) {
-        //     self::$browser->setIsRobot(true);
+        if (stripos(self::$userAgentString, 'Chrome') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'Chrome'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName($title);
 
-        //     return true;
-        // }
+            return true;
+        } elseif (stripos(self::$userAgentString, 'CriOS') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'CriOS'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName($title);
 
-        // return false;
-        // $userAgent = ' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
+            return true;
+        }
 
-        foreach (self::$spider_pattern as $key => $value) {
-            if (preg_match($value[0], self::$userAgentString, $mat)) {
-                self::$browser->setIsRobot(true);
-                self::$browser->setName($value[1] ?: $mat[1]);
-                self::$browser->setVersion(isset($mat[2]) ? $mat[2] : '0.0');
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Comodo Dragon / Ice Dragon / Chromodo.
+     *
+     * @return bool
+     */
+    public static function checkBrowserDragon($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Dragon') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'Dragon'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Microsoft Edge.
+     *
+     * @return bool
+     */
+    public static function checkBrowserEdge($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Edge') !== false) {
+            $version = explode('Edge/', self::$userAgentString);
+            if (isset($version[1])) {
+                self::$browser->setVersion((float) $version[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Firebird.
+     *
+     * @return bool
+     */
+    public static function checkBrowserFirebird($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Firebird') !== false) {
+            $aversion = explode('/', stristr(self::$userAgentString, 'Firebird'));
+            if (isset($aversion[1])) {
+                self::$browser->setVersion($aversion[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Firefox.
+     *
+     * @return bool
+     */
+    public static function checkBrowserFirefox($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'safari') === false) {
+            if (preg_match("/Firefox[\/ \(]([^ ;\)]+)/i", self::$userAgentString, $matches)) {
+                if (isset($matches[1])) {
+                    self::$browser->setVersion($matches[1]);
+                }
+                self::$browser->setName($title);
+
+                return true;
+            } elseif (preg_match('/Firefox$/i', self::$userAgentString, $matches)) {
+                self::$browser->setVersion('');
+                self::$browser->setName($title);
+
                 return true;
             }
         }
 
-        $spider = new CrawlerDetect(null, self::$userAgentString);
-        if ($spider->isCrawler()) {
-            self::$browser->setIsRobot(true);
-            self::$browser->setName($spider->getMatches());
-            self::$browser->setVersion(0);
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Galeon.
+     *
+     * @return bool
+     */
+    public static function checkBrowserGaleon($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'galeon') !== false) {
+            $aresult  = explode(' ', stristr(self::$userAgentString, 'galeon'));
+            $aversion = explode('/', $aresult[0]);
+            if (isset($aversion[1])) {
+                self::$browser->setVersion($aversion[1]);
+            }
+            self::$browser->setName($title);
+
             return true;
         }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Google Search Appliance.
+     *
+     * @return bool
+     */
+    public static function checkBrowserGsa($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'GSA') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'GSA'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function checkBrowserHuaWei($name, $title)
+    {
+        // Mozilla/5.0 (Linux; Android 5.1; zh-cn; HUAWEI CUN-AL00 Build/CUN-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
+        //Mozilla/5.0 (Linux; Android 9; COR-AL00 Build/HUAWEICOR-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
+        //Mozilla/5.0 (Linux; Android 7.0; BLN-AL40 Build/HONORBLN-AL40) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.0.0 Mobile Safari/537.36
+        if (preg_match('/HuaweiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName($title);
+            self::$browser->setVersion($mat[1]);
+
+            return true;
+        }
+
+        if (stripos(self::$userAgentString, ' HUAWEI ') !== false
+            || stripos(self::$userAgentString, 'Build/HUAWEI') !== false
+            || stripos(self::$userAgentString, 'Build/HONOR') !== false
+        ) {
+            self::$browser->setName($title);
+            self::$browser->setVersion('0');
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is iCab.
+     *
+     * @return bool
+     */
+    public static function checkBrowserIcab($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'icab') !== false) {
+            $aversion = explode(' ', stristr(str_replace('/', ' ', self::$userAgentString), 'icab'));
+            if (isset($aversion[1])) {
+                self::$browser->setVersion($aversion[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Ice Cat.
+     *
+     * @return bool
+     */
+    public static function checkBrowserIceCat($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Mozilla') !== false &&
+            preg_match('/IceCat\/([^ ]*)/i', self::$userAgentString, $matches)
+        ) {
+            if (isset($matches[1])) {
+                self::$browser->setVersion($matches[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Iceweasel.
+     *
+     * @return bool
+     */
+    public static function checkBrowserIceweasel($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Iceweasel') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'Iceweasel'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
         return false;
     }
 
@@ -346,7 +566,7 @@ class BrowserDetector implements DetectorInterface
                     $aresult = explode(' ', stristr(str_replace(';', '; ', self::$userAgentString), 'MSN'));
                     self::$browser->setName($title);
                     if (isset($aresult[1])) {
-                        self::$browser->setVersion(str_replace(array('(', ')', ';'), '', $aresult[1]));
+                        self::$browser->setVersion(str_replace(['(', ')', ';'], '', $aresult[1]));
                     }
 
                     return true;
@@ -354,7 +574,7 @@ class BrowserDetector implements DetectorInterface
                 $aresult = explode(' ', stristr(str_replace(';', '; ', self::$userAgentString), 'msie'));
                 self::$browser->setName($title);
                 if (isset($aresult[1])) {
-                    self::$browser->setVersion(str_replace(array('(', ')', ';'), '', $aresult[1]));
+                    self::$browser->setVersion(str_replace(['(', ')', ';'], '', $aresult[1]));
                 }
                 // See https://msdn.microsoft.com/en-us/library/ie/hh869301%28v=vs.85%29.aspx
                 // Might be 11, anyway !
@@ -439,6 +659,216 @@ class BrowserDetector implements DetectorInterface
     }
 
     /**
+     * Determine if the browser is Konqueror.
+     *
+     * @return bool
+     */
+    public static function checkBrowserKonqueror($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Konqueror') !== false) {
+            $aresult  = explode(' ', stristr(self::$userAgentString, 'Konqueror'));
+            $aversion = explode('/', $aresult[0]);
+            if (isset($aversion[1])) {
+                self::$browser->setVersion($aversion[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /* check 猎豹 browser*/
+    public static function checkBrowserLIEBAO($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'LBBROWSER') !== false) {
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Lynx.
+     *
+     * @return bool
+     */
+    public static function checkBrowserLynx($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'lynx') !== false) {
+            $aresult  = explode('/', stristr(self::$userAgentString, 'Lynx'));
+            $aversion = explode(' ', (isset($aresult[1]) ? $aresult[1] : ''));
+            self::$browser->setVersion($aversion[0]);
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function checkBrowserMaxthon($name, $title)
+    {
+        if (preg_match('/Maxthon\/(.+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName($title);
+            self::$browser->setVersion($mat[1]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function checkBrowserMiuiBrowser($name, $title)
+    {
+        if (preg_match('/MiuiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName($title);
+            self::$browser->setVersion($mat[1]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Mozilla.
+     *
+     * @return bool
+     */
+    public static function checkBrowserMozilla($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'mozilla') !== false &&
+            preg_match('/rv:[0-9].[0-9][a-b]?/i', self::$userAgentString) &&
+            stripos(self::$userAgentString, 'netscape') === false
+        ) {
+            $aversion = explode(' ', stristr(self::$userAgentString, 'rv:'));
+            preg_match('/rv:[0-9].[0-9][a-b]?/i', self::$userAgentString, $aversion);
+            self::$browser->setVersion(str_replace('rv:', '', $aversion[0]));
+            self::$browser->setName($title);
+
+            return true;
+        } elseif (stripos(self::$userAgentString, 'mozilla') !== false &&
+            preg_match('/rv:[0-9]\.[0-9]/i', self::$userAgentString) &&
+            stripos(self::$userAgentString, 'netscape') === false
+        ) {
+            $aversion = explode('', stristr(self::$userAgentString, 'rv:'));
+            self::$browser->setVersion(str_replace('rv:', '', $aversion[0]));
+            self::$browser->setName($title);
+
+            return true;
+        } elseif (stripos(self::$userAgentString, 'mozilla') !== false &&
+            preg_match('/mozilla\/([^ ]*)/i', self::$userAgentString, $matches) &&
+            stripos(self::$userAgentString, 'netscape') === false
+        ) {
+            if (isset($matches[1])) {
+                self::$browser->setVersion($matches[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is NetPositive.
+     *
+     * @return bool
+     */
+    public static function checkBrowserNetPositive($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'NetPositive') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'NetPositive'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion(str_replace(['(', ')', ';'], '', $aversion[0]));
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Netscape Navigator 9+.
+     *
+     * @return bool
+     */
+    public static function checkBrowserNetscapeNavigator9Plus($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Firefox') !== false &&
+            preg_match('/Navigator\/([^ ]*)/i', self::$userAgentString, $matches)
+        ) {
+            if (isset($matches[1])) {
+                self::$browser->setVersion($matches[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        } elseif (stripos(self::$userAgentString, 'Firefox') === false &&
+            preg_match('/Netscape6?\/([^ ]*)/i', self::$userAgentString, $matches)
+        ) {
+            if (isset($matches[1])) {
+                self::$browser->setVersion($matches[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Nokia.
+     *
+     * @return bool
+     */
+    public static function checkBrowserNokia($name, $title)
+    {
+        if (preg_match("/Nokia([^\/]+)\/([^ SP]+)/i", self::$userAgentString, $matches)) {
+            self::$browser->setVersion($matches[2]);
+            if (stripos(self::$userAgentString, 'Series60') !== false ||
+                strpos(self::$userAgentString, 'S60') !== false
+            ) {
+                self::$browser->setName($title);
+            } else {
+                self::$browser->setName($title);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is OmniWeb.
+     *
+     * @return bool
+     */
+    public static function checkBrowserOmniWeb($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'omniweb') !== false) {
+            $aresult  = explode('/', stristr(self::$userAgentString, 'omniweb'));
+            $aversion = explode(' ', isset($aresult[1]) ? $aresult[1] : '');
+            self::$browser->setVersion($aversion[0]);
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Determine if the browser is Opera.
      *
      * @return bool
@@ -504,15 +934,43 @@ class BrowserDetector implements DetectorInterface
         return false;
     }
 
+    public static function checkBrowserOppo($name, $title)
+    {
+        if (preg_match('/OppoBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName($title);
+            self::$browser->setVersion($mat[1]);
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
-     * Determine if the browser is Chrome.
+     * Determine if the browser is Phoenix.
      *
      * @return bool
      */
-    public static function checkBrowserChrome($name, $title)
+    public static function checkBrowserPhoenix($name, $title)
     {
-        if (stripos(self::$userAgentString, 'Chrome') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'Chrome'));
+        if (stripos(self::$userAgentString, 'Phoenix') !== false) {
+            $aversion = explode('/', stristr(self::$userAgentString, 'Phoenix'));
+            if (isset($aversion[1])) {
+                self::$browser->setVersion($aversion[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /* check qq browser*/
+    public static function checkBrowserQQ($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'QQBrowser') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'QQBrowser'));
             if (isset($aresult[1])) {
                 $aversion = explode(' ', $aresult[1]);
                 self::$browser->setVersion($aversion[0]);
@@ -520,8 +978,188 @@ class BrowserDetector implements DetectorInterface
             self::$browser->setName($title);
 
             return true;
-        } elseif (stripos(self::$userAgentString, 'CriOS') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'CriOS'));
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is a robot.
+     *
+     * @return bool
+     */
+    public static function checkBrowserRobot($name, $title)
+    {
+        // if (stripos(self::$userAgentString, 'bot') !== false ||
+        //     stripos(self::$userAgentString, 'spider') !== false ||
+        //     stripos(self::$userAgentString, 'crawler') !== false ||
+        //     stripos(self::$userAgentString, 'spider') !== false
+        // ) {
+        //     self::$browser->setIsRobot(true);
+
+        //     return true;
+        // }
+
+        // return false;
+        // $userAgent = ' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b';
+
+        foreach (self::$spider_pattern as $key => $value) {
+            if (preg_match($value[0], self::$userAgentString, $mat)) {
+                self::$browser->setIsRobot(true);
+                self::$browser->setName($value[1] ?: $mat[1]);
+                self::$browser->setVersion(isset($mat[2]) ? $mat[2] : '0.0');
+
+                return true;
+            }
+        }
+
+        $spider = new CrawlerDetect(null, self::$userAgentString);
+        if ($spider->isCrawler()) {
+            self::$browser->setIsRobot(true);
+            self::$browser->setName($spider->getMatches());
+            self::$browser->setVersion(0);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function checkBrowserRobotIP($name, $title)
+    {
+        $ip = self::$browser->getIP();
+        if (!$ip) {
+            $ip = self::getClientIp();
+        }
+        //百度蜘蛛ip段
+        foreach (self::$spider_ips as $key => $value) {
+            $ips   = $value['ips'];
+            $title = $value['title'];
+            foreach ($ips as $key => $value) {
+                if (strpos($ip, $value) === 0) {
+                    self::$browser->setIsRobot(true);
+                    self::$browser->setName($title);
+                    self::$browser->setVersion(0);
+
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Safari.
+     *
+     * @return bool
+     */
+    public static function checkBrowserSafari($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Safari') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'Version'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            } else {
+                self::$browser->setVersion(Browser::VERSION_UNKNOWN);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function checkBrowserSamsung($name, $title)
+    {
+        if (preg_match('/SamsungBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
+            self::$browser->setName($title);
+            self::$browser->setVersion($mat[1]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is SeaMonkey.
+     *
+     * @return bool
+     */
+    public static function checkBrowserSeaMonkey($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'safari') === false) {
+            if (preg_match("/SeaMonkey[\/ \(]([^ ;\)]+)/i", self::$userAgentString, $matches)) {
+                if (isset($matches[1])) {
+                    self::$browser->setVersion($matches[1]);
+                }
+                self::$browser->setName($title);
+
+                return true;
+            } elseif (preg_match('/SeaMonkey$/i', self::$userAgentString, $matches)) {
+                self::$browser->setVersion('');
+                self::$browser->setName($title);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the browser is Shiretoko.
+     *
+     * @return bool
+     */
+    public static function checkBrowserShiretoko($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'Mozilla') !== false &&
+            preg_match('/Shiretoko\/([^ ]*)/i', self::$userAgentString, $matches)
+        ) {
+            if (isset($matches[1])) {
+                self::$browser->setVersion($matches[1]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function checkBrowserSouGou($name, $title)
+    {
+        if (preg_match('/\sSE\s(.*?)\sMetaSr/i', self::$userAgentString, $mat)) {
+            self::$browser->setName($title);
+            self::$browser->setVersion($mat[1]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /* check uc browser*/
+    public static function checkBrowserUC($name, $title)
+    {
+        if (stripos(self::$userAgentString, 'UBrowser') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'UBrowser'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                self::$browser->setVersion($aversion[0]);
+            }
+            self::$browser->setName($title);
+
+            return true;
+        }
+
+        if (stripos(self::$userAgentString, 'UCBrowser') !== false) {
+            $aresult = explode('/', stristr(self::$userAgentString, 'UCBrowser'));
             if (isset($aresult[1])) {
                 $aversion = explode(' ', $aresult[1]);
                 self::$browser->setVersion($aversion[0]);
@@ -555,40 +1193,11 @@ class BrowserDetector implements DetectorInterface
         return false;
     }
 
-    /**
-     * Determine if the browser is Microsoft Edge.
-     *
-     * @return bool
-     */
-    public static function checkBrowserEdge($name, $title)
+    public static function checkBrowserVivo($name, $title)
     {
-        if (stripos(self::$userAgentString, 'Edge') !== false) {
-            $version = explode('Edge/', self::$userAgentString);
-            if (isset($version[1])) {
-                self::$browser->setVersion((float) $version[1]);
-            }
+        if (preg_match('/VivoBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
             self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Google Search Appliance.
-     *
-     * @return bool
-     */
-    public static function checkBrowserGsa($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'GSA') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'GSA'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
+            self::$browser->setVersion($mat[1]);
 
             return true;
         }
@@ -608,420 +1217,6 @@ class BrowserDetector implements DetectorInterface
             if (isset($aresult[1])) {
                 $aversion = explode(' ', $aresult[1]);
                 self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is NetPositive.
-     *
-     * @return bool
-     */
-    public static function checkBrowserNetPositive($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'NetPositive') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'NetPositive'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion(str_replace(array('(', ')', ';'), '', $aversion[0]));
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Galeon.
-     *
-     * @return bool
-     */
-    public static function checkBrowserGaleon($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'galeon') !== false) {
-            $aresult  = explode(' ', stristr(self::$userAgentString, 'galeon'));
-            $aversion = explode('/', $aresult[0]);
-            if (isset($aversion[1])) {
-                self::$browser->setVersion($aversion[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Konqueror.
-     *
-     * @return bool
-     */
-    public static function checkBrowserKonqueror($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'Konqueror') !== false) {
-            $aresult  = explode(' ', stristr(self::$userAgentString, 'Konqueror'));
-            $aversion = explode('/', $aresult[0]);
-            if (isset($aversion[1])) {
-                self::$browser->setVersion($aversion[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is iCab.
-     *
-     * @return bool
-     */
-    public static function checkBrowserIcab($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'icab') !== false) {
-            $aversion = explode(' ', stristr(str_replace('/', ' ', self::$userAgentString), 'icab'));
-            if (isset($aversion[1])) {
-                self::$browser->setVersion($aversion[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is OmniWeb.
-     *
-     * @return bool
-     */
-    public static function checkBrowserOmniWeb($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'omniweb') !== false) {
-            $aresult  = explode('/', stristr(self::$userAgentString, 'omniweb'));
-            $aversion = explode(' ', isset($aresult[1]) ? $aresult[1] : '');
-            self::$browser->setVersion($aversion[0]);
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Phoenix.
-     *
-     * @return bool
-     */
-    public static function checkBrowserPhoenix($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'Phoenix') !== false) {
-            $aversion = explode('/', stristr(self::$userAgentString, 'Phoenix'));
-            if (isset($aversion[1])) {
-                self::$browser->setVersion($aversion[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Firebird.
-     *
-     * @return bool
-     */
-    public static function checkBrowserFirebird($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'Firebird') !== false) {
-            $aversion = explode('/', stristr(self::$userAgentString, 'Firebird'));
-            if (isset($aversion[1])) {
-                self::$browser->setVersion($aversion[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Netscape Navigator 9+.
-     *
-     * @return bool
-     */
-    public static function checkBrowserNetscapeNavigator9Plus($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'Firefox') !== false &&
-            preg_match('/Navigator\/([^ ]*)/i', self::$userAgentString, $matches)
-        ) {
-            if (isset($matches[1])) {
-                self::$browser->setVersion($matches[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        } elseif (stripos(self::$userAgentString, 'Firefox') === false &&
-            preg_match('/Netscape6?\/([^ ]*)/i', self::$userAgentString, $matches)
-        ) {
-            if (isset($matches[1])) {
-                self::$browser->setVersion($matches[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Shiretoko.
-     *
-     * @return bool
-     */
-    public static function checkBrowserShiretoko($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'Mozilla') !== false &&
-            preg_match('/Shiretoko\/([^ ]*)/i', self::$userAgentString, $matches)
-        ) {
-            if (isset($matches[1])) {
-                self::$browser->setVersion($matches[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Ice Cat.
-     *
-     * @return bool
-     */
-    public static function checkBrowserIceCat($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'Mozilla') !== false &&
-            preg_match('/IceCat\/([^ ]*)/i', self::$userAgentString, $matches)
-        ) {
-            if (isset($matches[1])) {
-                self::$browser->setVersion($matches[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Nokia.
-     *
-     * @return bool
-     */
-    public static function checkBrowserNokia($name, $title)
-    {
-        if (preg_match("/Nokia([^\/]+)\/([^ SP]+)/i", self::$userAgentString, $matches)) {
-            self::$browser->setVersion($matches[2]);
-            if (stripos(self::$userAgentString, 'Series60') !== false ||
-                strpos(self::$userAgentString, 'S60') !== false
-            ) {
-                self::$browser->setName($title);
-            } else {
-                self::$browser->setName($title);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Firefox.
-     *
-     * @return bool
-     */
-    public static function checkBrowserFirefox($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'safari') === false) {
-            if (preg_match("/Firefox[\/ \(]([^ ;\)]+)/i", self::$userAgentString, $matches)) {
-                if (isset($matches[1])) {
-                    self::$browser->setVersion($matches[1]);
-                }
-                self::$browser->setName($title);
-
-                return true;
-            } elseif (preg_match('/Firefox$/i', self::$userAgentString, $matches)) {
-                self::$browser->setVersion('');
-                self::$browser->setName($title);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is SeaMonkey.
-     *
-     * @return bool
-     */
-    public static function checkBrowserSeaMonkey($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'safari') === false) {
-            if (preg_match("/SeaMonkey[\/ \(]([^ ;\)]+)/i", self::$userAgentString, $matches)) {
-                if (isset($matches[1])) {
-                    self::$browser->setVersion($matches[1]);
-                }
-                self::$browser->setName($title);
-
-                return true;
-            } elseif (preg_match('/SeaMonkey$/i', self::$userAgentString, $matches)) {
-                self::$browser->setVersion('');
-                self::$browser->setName($title);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Iceweasel.
-     *
-     * @return bool
-     */
-    public static function checkBrowserIceweasel($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'Iceweasel') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'Iceweasel'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Mozilla.
-     *
-     * @return bool
-     */
-    public static function checkBrowserMozilla($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'mozilla') !== false &&
-            preg_match('/rv:[0-9].[0-9][a-b]?/i', self::$userAgentString) &&
-            stripos(self::$userAgentString, 'netscape') === false
-        ) {
-            $aversion = explode(' ', stristr(self::$userAgentString, 'rv:'));
-            preg_match('/rv:[0-9].[0-9][a-b]?/i', self::$userAgentString, $aversion);
-            self::$browser->setVersion(str_replace('rv:', '', $aversion[0]));
-            self::$browser->setName($title);
-
-            return true;
-        } elseif (stripos(self::$userAgentString, 'mozilla') !== false &&
-            preg_match('/rv:[0-9]\.[0-9]/i', self::$userAgentString) &&
-            stripos(self::$userAgentString, 'netscape') === false
-        ) {
-            $aversion = explode('', stristr(self::$userAgentString, 'rv:'));
-            self::$browser->setVersion(str_replace('rv:', '', $aversion[0]));
-            self::$browser->setName($title);
-
-            return true;
-        } elseif (stripos(self::$userAgentString, 'mozilla') !== false &&
-            preg_match('/mozilla\/([^ ]*)/i', self::$userAgentString, $matches) &&
-            stripos(self::$userAgentString, 'netscape') === false
-        ) {
-            if (isset($matches[1])) {
-                self::$browser->setVersion($matches[1]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Lynx.
-     *
-     * @return bool
-     */
-    public static function checkBrowserLynx($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'lynx') !== false) {
-            $aresult  = explode('/', stristr(self::$userAgentString, 'Lynx'));
-            $aversion = explode(' ', (isset($aresult[1]) ? $aresult[1] : ''));
-            self::$browser->setVersion($aversion[0]);
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Amaya.
-     *
-     * @return bool
-     */
-    public static function checkBrowserAmaya($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'amaya') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'Amaya'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the browser is Safari.
-     *
-     * @return bool
-     */
-    public static function checkBrowserSafari($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'Safari') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'Version'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            } else {
-                self::$browser->setVersion(Browser::VERSION_UNKNOWN);
             }
             self::$browser->setName($title);
 
@@ -1053,19 +1248,14 @@ class BrowserDetector implements DetectorInterface
     }
 
     /**
-     * Determine if the browser is Comodo Dragon / Ice Dragon / Chromodo.
+     * Determine if the user is using Chrome Frame.
      *
      * @return bool
      */
-    public static function checkBrowserDragon($name, $title)
+    public static function checkChromeFrame()
     {
-        if (stripos(self::$userAgentString, 'Dragon') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'Dragon'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
+        if (strpos(self::$userAgentString, 'chromeframe') !== false) {
+            self::$browser->setIsChromeFrame(true);
 
             return true;
         }
@@ -1074,222 +1264,83 @@ class BrowserDetector implements DetectorInterface
     }
 
     /**
-     * Determine if the browser is Android.
+     * Determine if the user is using Facebook.
      *
      * @return bool
      */
-    public static function checkBrowserAndroid($name, $title)
+    public static function checkFacebookWebView()
     {
-        // Navigator
-        if (stripos(self::$userAgentString, 'Android') !== false) {
-            if (preg_match('/Version\/([\d\.]*)/i', self::$userAgentString, $matches)) {
-                if (isset($matches[1])) {
-                    self::$browser->setVersion($matches[1]);
+        if (strpos(self::$userAgentString, 'FBAV') !== false) {
+            self::$browser->setIsFacebookWebView(true);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Routine to determine the browser type.
+     *
+     * @param  Browser   $browser
+     * @param  UserAgent $userAgent
+     * @return bool
+     */
+    public static function detect(Browser $browser, UserAgent $userAgent = null)
+    {
+        self::$browser = $browser;
+        if (is_null($userAgent)) {
+            $userAgent = self::$browser->getUserAgent();
+        }
+        self::$userAgentString = $userAgent->getUserAgentString();
+
+        self::$browser->setName(Browser::UNKNOWN);
+        self::$browser->setVersion(Browser::VERSION_UNKNOWN);
+
+        self::checkChromeFrame();
+        self::checkFacebookWebView();
+
+        foreach (self::$browsersList as $browserName => $title) {
+            $funcName = self::FUNC_PREFIX . $browserName;
+
+            if (self::$funcName($browserName, $title)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function getClientIp($type = false, $adv = true)
+    {
+        $type      = $type ? 1 : 0;
+        $type      = 0;
+        static $ip = null;
+        if ($ip !== null) {
+            return $ip[$type];
+        }
+
+        if ($adv) {
+            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $pos = array_search('unknown', $arr);
+                if (false !== $pos) {
+                    unset($arr[$pos]);
                 }
-            } else {
-                self::$browser->setVersion(Browser::VERSION_UNKNOWN);
+
+                $ip = trim($arr[0]);
+            } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+                $ip = $_SERVER['REMOTE_ADDR'];
             }
-            self::$browser->setName($title);
-
-            return true;
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
         }
+        // IP地址合法验证
+        $long = sprintf('%u', ip2long($ip));
+        $ip   = $long ? [$ip, $long] : ['0.0.0.0', 0];
 
-        return false;
-    }
-
-    /* check uc browser*/
-    public static function checkBrowserUC($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'UBrowser') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'UBrowser'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
-            return true;
-        }
-
-        if (stripos(self::$userAgentString, 'UCBrowser') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'UCBrowser'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
-            return true;
-        }
-
-        return false;
-    }
-
-    /* check baidu browser*/
-    public static function checkBrowserBAIDU($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'BIDUBrowser') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'BIDUBrowser'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
-            return true;
-        }
-
-        return false;
-    }
-
-    /* check qq browser*/
-    public static function checkBrowserQQ($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'QQBrowser') !== false) {
-            $aresult = explode('/', stristr(self::$userAgentString, 'QQBrowser'));
-            if (isset($aresult[1])) {
-                $aversion = explode(' ', $aresult[1]);
-                self::$browser->setVersion($aversion[0]);
-            }
-            self::$browser->setName($title);
-            return true;
-        }
-
-        return false;
-    }
-
-    /* check 猎豹 browser*/
-    public static function checkBrowserLIEBAO($name, $title)
-    {
-        if (stripos(self::$userAgentString, 'LBBROWSER') !== false) {
-            self::$browser->setName($title);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowserMaxthon($name, $title)
-    {
-        if (preg_match('/Maxthon\/(.+)/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[1]);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowser2345Explorer($name, $title)
-    {
-        if (preg_match('/(Mb)?2345Explorer\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[2]);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowserMiuiBrowser($name, $title)
-    {
-        if (preg_match('/MiuiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[1]);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowserBaiduBoxApp($name, $title)
-    {
-        if (preg_match('/baiduboxapp\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[1]);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowserSouGou($name, $title)
-    {
-        if (preg_match('/\sSE\s(.*?)\sMetaSr/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[1]);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowserHuaWei($name, $title)
-    {
-        // Mozilla/5.0 (Linux; Android 5.1; zh-cn; HUAWEI CUN-AL00 Build/CUN-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
-        //Mozilla/5.0 (Linux; Android 9; COR-AL00 Build/HUAWEICOR-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36
-        //Mozilla/5.0 (Linux; Android 7.0; BLN-AL40 Build/HONORBLN-AL40) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.0.0 Mobile Safari/537.36
-        if (preg_match('/HuaweiBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[1]);
-            return true;
-        }
-
-        if (stripos(self::$userAgentString, ' HUAWEI ') !== false
-            || stripos(self::$userAgentString, 'Build/HUAWEI') !== false
-            || stripos(self::$userAgentString, 'Build/HONOR') !== false
-        ) {
-            self::$browser->setName($title);
-            self::$browser->setVersion('0');
-            return true;
-        }
-        return false;
-    }
-    public static function checkBrowserSamsung($name, $title)
-    {
-        if (preg_match('/SamsungBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[1]);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowserVivo($name, $title)
-    {
-        if (preg_match('/VivoBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[1]);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowserOppo($name, $title)
-    {
-        if (preg_match('/OppoBrowser\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-            self::$browser->setName($title);
-            self::$browser->setVersion($mat[1]);
-            return true;
-        }
-
-        return false;
-    }
-    public static function checkBrowser360SE($name, $title)
-    {
-        if (stripos(self::$userAgentString, '360SE') !== false) {
-            self::$browser->setName($title);
-            if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-                self::$browser->setVersion($mat[1]);
-            } else {
-                self::$browser->setVersion('0');
-            }
-            return true;
-        }
-        return false;
-    }
-    public static function checkBrowser360EE($name, $title)
-    {
-        if (stripos(self::$userAgentString, '360EE') !== false) {
-            self::$browser->setName($title);
-            if (preg_match('/Chrome\/([\.\d]+)/i', self::$userAgentString, $mat)) {
-                self::$browser->setVersion($mat[1]);
-            } else {
-                self::$browser->setVersion('0');
-            }
-            return true;
-        }
-        return false;
+        return $ip[$type];
     }
 }
