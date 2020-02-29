@@ -87,7 +87,7 @@ browser-detector
 
 ### 安装
     
-    composer require mokuyu/browser-detector
+    composer require ank/browser-detector
 
 ### 使用
 ```
