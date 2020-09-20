@@ -33,7 +33,10 @@ class BrowserDetector implements DetectorInterface
             //     before FireFox are necessary
             // (7) Microsoft Edge must be checked before Chrome and Safari
             // (7) Vivaldi must be checked before Chrome
-            'RobotIP'                => '百度蜘蛛',
+            'RobotIP' => '百度蜘蛛',
+            // common bots
+            'Robot'   => '蜘蛛',
+            
             'WebTv'                  => 'WebTv',
             'InternetExplorer'       => 'IE',
             'Edge'                   => 'Edge',
@@ -71,8 +74,6 @@ class BrowserDetector implements DetectorInterface
             'BlackBerry'             => '黑莓',
             'Nokia'                  => '诺基亚',
             'Gsa'                    => 'Gsa',
-            // common bots
-            'Robot'                  => '蜘蛛',
             // WebKit base check (post mobile and others)
             'Safari'                 => 'Safari',
             // everyone else
