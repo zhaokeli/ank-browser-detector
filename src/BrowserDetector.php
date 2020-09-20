@@ -146,6 +146,7 @@ class BrowserDetector implements DetectorInterface
             ['/(BingPreview)\/([\.\d]+)/i', '必应蜘蛛'],
             ['/(Baiduspider\-render)\/([\.\d]+)/i', '百度蜘蛛'],
             ['/(Bytespider)/i', '字节蜘蛛'],
+            ['/(spider)/i', '未知蜘蛛'],
         ];
 
     protected static $userAgentString;
