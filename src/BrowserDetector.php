@@ -36,7 +36,7 @@ class BrowserDetector implements DetectorInterface
             'RobotIP' => '百度蜘蛛',
             // common bots
             'Robot'   => '蜘蛛',
-            
+
             'WebTv'                  => 'WebTv',
             'InternetExplorer'       => 'IE',
             'Edge'                   => 'Edge',
@@ -366,7 +366,15 @@ class BrowserDetector implements DetectorInterface
 
             return true;
         }
+        if (stripos(self::$userAgentString, 'Edg/') !== false) {
+            $version = explode('Edg/', self::$userAgentString);
+            if (isset($version[1])) {
+                self::$browser->setVersion((float)$version[1]);
+            }
+            self::$browser->setName($title);
 
+            return true;
+        }
         return false;
     }
 
